@@ -1,13 +1,17 @@
 import { useState } from 'react';
 
-const initialItems = [
-  { id: 1, description: 'Passports', quantity: 2, packed: false },
-  { id: 2, description: 'Socks', quantity: 12, packed: false },
-  { id: 3, description: 'Charger', quantity: 1, packed: true },
-];
+// const initialItems = [
+//   { id: 1, description: 'Passports', quantity: 2, packed: false },
+//   { id: 2, description: 'Socks', quantity: 12, packed: false },
+//   { id: 3, description: 'Charger', quantity: 1, packed: true },
+// ];
 
 export default function App() {
   const [items, setItems] = useState([]);
+  let packedItemsQuantity = items.filter((i) => i.packed).length;
+  let percentsItemsPacked = Math.round(
+    (packedItemsQuantity / items.length) * 100,
+  );
 
   function handleAddItems(item) {
     setItems((items) => [...items, item]);
@@ -34,7 +38,11 @@ export default function App() {
         onDeleteItems={handleDeleteItems}
         onToggleItem={handleToggleItem}
       />
-      <Stats />
+      <Stats
+        listLength={items.length}
+        packedItemsQuantity={packedItemsQuantity}
+        percentsItemsPacked={percentsItemsPacked}
+      />
     </div>
   );
 }
@@ -118,11 +126,12 @@ function Item({ item, onDeleteItems, onToggleItem }) {
   );
 }
 
-function Stats() {
+function Stats({ listLength, packedItemsQuantity, percentsItemsPacked }) {
   return (
     <footer className='stats'>
       <em>
-        👜 You have X items in your list and you have already packed X (X%)
+        👜 You have {listLength} items in your list and you have already packed{' '}
+        {packedItemsQuantity} ({percentsItemsPacked}%)
       </em>
     </footer>
   );
